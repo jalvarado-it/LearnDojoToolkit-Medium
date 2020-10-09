@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Helo Dojo</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.7.12/dojo/dojo.js"></script>
+    <script>typeof(dojo) === "undefined" && document.write(unescape('%3Cscriptsrc="js/libs/dojo/dojo.js"%3E%3C/script%3E'))</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    
+</head>
+  <body>
+    <h1>Learn Dojo Toolkit !</h1>
+    <div>Today is: <span id="day"></span></div>
+    
+    <script>
+        require(["dojo/ready", "dojo/dom", "dojo/dom-construct","dojo/_base/window"],function(ready,dom,construct,win){
+
+            // When the dom is ready
+            ready(function(){                   // Uses dojo/ready
+                var day = dom.byId("day");      //Get <span id="day"> uses dojo/dom
+                //The week day
+                var d = new Date();
+                var weekDay = null;
+                switch(d.getDay()){
+                    case 0:
+                        weekDay = 'Sunday';
+                        break;
+                    case 1:
+                        weekDay = 'Monday';
+                        break;
+                    case 2:
+                        weekDay = 'Tuesday';
+                        break;
+                    case 3:
+                        weekDay = 'Wednesday';
+                        break;
+                    case 4:
+                        weekDay = 'Thursday';
+                        break;
+                    case 5:
+                        weekDay = 'Friday';
+                        break;
+                    case 6:
+                        weekDay = 'Saturday';
+                        break;
+                }
+                day.innerHTML = weekDay;   
+                var node = construct.create("h2",{
+                    innerHTML: "Happy " + weekDay + " !"
+                    },
+                    win.body()
+                );  
+            });
+        });
+    </script>
+</body>
+</html>

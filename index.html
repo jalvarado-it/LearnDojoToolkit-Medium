@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--Dojo-->
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.7.12/dojo/dojo.js"></script>
+    <script>typeof(dojo) === "undefined" && document.write(unescape('%3Cscriptsrc="js/libs/dojo/dojo.js"%3E%3C/script%3E'))</script>
+    <style>
+        #lista li{
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+      <h1>Hola Dojo</h1>
+      <div id="message">Mensaje</div>
+      <button id="btn1">Boton 1</button>
+      <button id="btn2">Boton 2</button>
+      <hr/>
+        <div id="sel">Has seleccionado: <span id="selitem"></span></div>
+      <ul id="lista">
+          <li>Manzanas</li>
+          <li>Mangos</li>
+          <li>Peras</li>
+          <li>Limones</li>
+      </ul>
+      <script>
+          require(["dojo/ready", "dojo/on", "dojo/dom"],function(ready,on,dom){
+            var btn1 = dom.byId("btn1");
+            var btn2 = dom.byId("btn2");
+            var msg = dom.byId("message");
+            on(btn1,"click",function(){
+                msg.innerHTML = "Boton 1";
+            });
+            on(btn2,"click",function(){
+                msg.innerHTML = "Boton 2";
+            });
+          });
+
+          require(["dojo/ready", "dojo/dom", "dojo/query", "dojo/on"],function(ready,dom,query,on){
+              ready(function(){
+                var node = dom.byId("lista");
+                var item = dom.byId("selitem");
+                var q = query("#lista li").forEach(function(node){
+                    on(node,"click",function(){
+                        item.innerHTML = node.innerHTML;
+                    });
+                });
+              });              
+          });
+
+          require(["dojo/ready","dojo/dom-construct", "dojo/_base/window"],function(ready,domConstruct,win){
+            var node = domConstruct.create("div",{
+                innerHTML: "<p>Funciona!</p>"
+                },
+                win.body()
+            );  
+            ready(function(){
+                console.log("------");
+                console.log(dojo.body());
+                console.log(win);
+              });
+          });
+      </script>
+
+
+  </body>
+</html>

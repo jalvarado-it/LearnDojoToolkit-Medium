@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.7.12/dojo/dojo.js"></script>
+    <script>typeof(dojo) === "undefined" && document.write(unescape('%3Cscriptsrc="js/libs/dojo/dojo.js"%3E%3C/script%3E'))</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    
+</head>
+  <body>
+    <div class="container-fluid">
+        <div class="container"><h1>To Do</h1></div>
+        <div class="container">
+            <form>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-default">Task:</span>
+                    </div>
+                    <input type="text" id="task" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="form-group mb-3">
+                    <button type="button" class="btn btn-primary px-4 mx-2" id="btnAdd">Add</button>
+                    <button type="button" class="btn btn-danger px-4 mx-2" id="btnCancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <hr/>
+            <div id="tasklist" class="container list-group">
+            </div>
+        </div>
+        
+    </div>
+    
+    
+    <script>
+        require(["dojo/ready", "dojo/dom", "dojo/dom-construct","dojo/_base/window", "dojo/on", "dojo/string", "dojo/dom-class","dojo/mouse"],function(ready,dom,construct,win,on,string,domClass,mouse){
+            ready(function(){           
+                console.log("Dom is ready");      
+                var task = dom.byId("task");     
+                var btnAdd = dom.byId("btnAdd");
+                var btnCancel = dom.byId("btnCancel");
+                var taskList = dom.byId("tasklist");
+
+                on(btnAdd,"click",function(){
+                    var taskName = task.value.trim();
+                    
+                    if(taskName != ""){
+                        console.log("You add a new task: " + taskName);
+                        // Add the new tasl
+                        var taskRow = construct.create("div",{
+                                class: "container list-group-item"
+                            },
+                            taskList
+                        );
+                        var row = construct.create("div",{
+                                class: "row"
+                            },
+                            taskRow
+                        );
+                        var taskItem = construct.create("div",{
+                                innerHTML: taskName,
+                                class: "col-sm-10"
+                            },
+                            row
+                        );
+                        var btnTask = construct.create("div",{
+                                class: "col-sm-2"
+                            },
+                            row
+                        );
+
+                        var delTask = construct.create("i",{
+                                class: "fas fa-trash-alt mx-2"
+                            },
+                            btnTask
+                        );
+
+                        var editTask = construct.create("i",{
+                                class: "fas fa-edit mx-2"
+                            },
+                            btnTask
+                        );
+                        
+                        on(taskRow,mouse.enter,function(){
+                            domClass.add(taskRow,"active");
+
+                        });
+
+                        on(taskRow,mouse.leave,function(){
+                            domClass.remove(taskRow,"active");
+                        });
+
+                        on(delTask,"click",function(){
+                            construct.destroy(taskRow);
+                        });
+
+                        on(editTask,"click",function(){
+                            task.value = taskName;
+                            construct.destroy(taskRow);
+                        });
+
+                        task.value = "";
+                    }else{
+                        cosole.log("No emty task allowed !");
+                    }
+                });
+
+                on(btnCancel,"click",function(){
+                    task.value = "";
+                });
+
+
+            });
+        });
+    </script>
+</body>
+</html>

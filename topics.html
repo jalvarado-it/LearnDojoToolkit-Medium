@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Topics</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.7.12/dojo/dojo.js"></script>
+    <script>typeof(dojo) === "undefined" && document.write(unescape('%3Cscriptsrc="js/libs/dojo/dojo.js"%3E%3C/script%3E'))</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    
+</head>
+  <body>
+    <div id="status" class="container"></div>
+    <div class="container">
+        <h3>Using topics</h3>
+        <form action="">
+            <div class="container row">
+                <div class="form-group col-sm-6">
+                    <label for="selElement">Factory:</label>
+                    <select name="" id="selFactory" class="form-control">
+                        <option value="all">All</option>
+                        <option value="f1">Factory 1</option>
+                        <option value="f2">Factory 2</option>
+                        <option value="f3">Factory 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group col-sm-6 mt-4">
+                    <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                          <input type="radio" name="options" id="btnActive" autocomplete="off" checked> Active
+                        </label>
+                        <label class="btn btn-secondary">
+                          <input type="radio" name="options" id="btnStandby" autocomplete="off"> Standby
+                        </label>
+                        <label class="btn btn-secondary">
+                          <input type="radio" name="options" id="btnStop" autocomplete="off"> Stop
+                        </label>
+                    </div>
+            </div>
+            <div class=" container row">
+                <div class="form-group col-sm-6">
+                    <label for="selType">Type:</label>
+                    <select name="" id="selType" class="form-control">
+                        <option value="screw">screw</option>
+                        <option value="nut">nut</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="numPieces">Pieces:</label>
+                    <input type="number" id="numPieces" value="0" min="0" max="100">
+                </div>
+            </div>
+            <div class=" container row">
+                <div class="col-sm-2">
+                    <button id="btnSend" type="button" class="btn btn-primary btn-block">Send</button>
+                </div>
+                <div class="col-sm-2">
+                    <button id="btnCancel" type="button" class="btn btn-danger btn-block">Cancel</button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-sm-4 border-primary border-right">
+                <h4>Factory 1</h4>
+                <div class="row">
+                    <div class="col-sm-3">Status:</div>
+                    <div class="col-sm-9">
+                        <span id="f1-status" class="badge badge-success status">Active</span>
+                    </div>
+                </div>
+                <div id="f1" class="wq container mt-4">
+                    <h6 class="border-primary border-bottom pb-2">Work queue</h6>
+                </div>
+            </div>
+            <div class="col-sm-4 border-danger border-right">
+                <h4>Factory 2</h4>
+                <div class="row">
+                    <div class="col-sm-3">Status:</div>
+                    <div class="col-sm-9">
+                        <span id="f2-status" class="badge badge-success status">Active</span>
+                    </div>
+                </div>
+                <div id="f2" class="wq container mt-4">
+                    <h6  class="border-primary border-bottom pb-2">Work queue</h6>
+                </div>
+            </div>
+            <div class="col-sm-4 border-success border-right">
+                <h4>Factory 3</h4>
+                <div class="row">
+                    <div class="col-sm-3">Status:</div>
+                    <div class="col-sm-9">
+                        <span id="f3-status" class="badge badge-success status">Active</span>
+                    </div>
+                </div>
+                <div id="f3" class="wq container mt-4">
+                    <h6  class="border-primary border-bottom pb-2">Work queue</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        require(["dojo/ready", "dojo/dom", "dojo/dom-construct", "dojo/on", "dojo/topic", "dojo/dom-class", "dojo/query"],function(ready,dom,construct,on,topic,domClass, query){
+            //Butons
+            var btnActive = dom.byId("btnActive");
+            var btnStandby = dom.byId("btnStandby");
+            var btnStop = dom.byId("btnStop");
+            var btnSend = dom.byId("btnSend");
+            var btnCancel = dom.byId("btnCancel");
+
+            var sFactory = dom.byId("selFactory");
+            var sStatus = dom.byId("selStatus");
+            var numPieces = dom.byId("numPieces");
+            var selType = dom.byId("selType");
+
+            function addWork(_parent,_type,_qty){
+                let row = construct.create("div",{
+                            class:"row"
+                        },
+                        _parent
+                    );
+
+                construct.create("div",{
+                    innerHTML: _type,
+                    class:"col-sm-6"
+                },
+                row
+                );
+
+                construct.create("div",{
+                    innerHTML: _qty,
+                    class:"col-sm-6"
+                },
+                row
+                );
+
+            }
+
+            
+
+            ready(function(){
+                status.innerHTML = "DOM is ready!";
+
+
+                // Button events
+                //--------------
+
+                // Active a factory
+                on(btnActive,"click",function(){
+                    var data = {
+                        factory: sFactory.value,
+                        status: "Active"
+                    };
+                    topic.publish("fstatus",data);
+                });
+
+                
+                // Standby a factory
+                on(btnStandby,"click",function(){
+                    var data = {
+                        factory: sFactory.value,
+                        status: "Standby"
+                    };
+                    topic.publish("fstatus",data);
+                });
+
+                // Stop a factory
+                on(btnStop,"click",function(){
+                    var data = {
+                        factory: sFactory.value,
+                        status: "Stopped"
+                    };
+                    topic.publish("fstatus",data);
+                });
+
+                on(btnSend,"click",function(){
+                    let data = {
+                        factory: sFactory.value,
+                        num: numPieces.value,
+                        type: selType.value
+                    };
+                    topic.publish("fwork",data);
+                });
+
+                on(btnCancel,"click",function(){
+                    sFactory.value = "all";
+                    numPieces.value = 0;
+                    selType.value = "";
+                });
+                
+                // Subscriptions
+                topic.subscribe("fwork",function(data){
+                    let f = data.factory;
+                    let num = data.num;
+                    let type = data.type;
+
+                    
+
+                    if(f == "all"){
+                        query(".wq").forEach(function(node){
+                            addWork(node,type,num);
+                        });
+                    }else{
+                        addWork(dom.byId(f),type,num);
+                    }
+                });
+
+                topic.subscribe("fstatus",function(data){
+                    let f = data.factory;
+                    let s = data.status; 
+                    let id = f+"-status";
+                    
+                    if(f == "all"){
+                        switch(s){
+                            case "Active":
+                                query(".status").forEach(function(node){
+                                    node.innerHTML = "Active";
+                                    domClass.add(node,"badge-success");
+                                    domClass.remove(node,"badge-danger");
+                                    domClass.remove(node,"badge-warning");
+                                });
+                                break;
+                            case "Standby":
+                                query(".status").forEach(function(node){
+                                    node.innerHTML = "Standby";
+                                    domClass.remove(node,"badge-success");
+                                    domClass.remove(node,"badge-danger");
+                                    domClass.add(node,"badge-warning");
+                                });
+                                break;
+                            case "Stopped":
+                                query(".status").forEach(function(node){
+                                    node.innerHTML = "Stopped";
+                                    domClass.remove(node,"badge-success");
+                                    domClass.add(node,"badge-danger");
+                                    domClass.remove(node,"badge-warning");
+                                });
+                                break;
+                        }
+                    }else{
+                        switch(s){
+                            case "Active":
+                                dom.byId(id).innerHTML = s;
+                                domClass.add(dom.byId(id),"badge-success");
+                                domClass.remove(dom.byId(id),"badge-danger");
+                                domClass.remove(dom.byId(id),"badge-warning");
+                                break;
+                            case "Standby":
+                                dom.byId(id).innerHTML = s;
+                                domClass.remove(dom.byId(id),"badge-success");
+                                domClass.remove(dom.byId(id),"badge-danger");
+                                domClass.add(dom.byId(id),"badge-warning");
+                                break;
+                            case "Stopped":
+                                dom.byId(id).innerHTML = s;
+                                domClass.remove(dom.byId(id),"badge-success");
+                                domClass.add(dom.byId(id),"badge-danger");
+                                domClass.remove(dom.byId(id),"badge-warning");
+                                break;
+                        }
+                    }
+
+                    console.log(data); 
+                });
+                
+            });
+        });
+    </script>
+
+</body>
+</html>
